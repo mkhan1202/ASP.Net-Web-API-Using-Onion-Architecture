@@ -6,8 +6,14 @@ using System.Threading.Tasks;
 
 namespace Application_Layer.DTOs.ProductDTO
 {
-    internal class ProductReadDTO
+    public class ProductReadDTO
     {
+        public int ProductId { get; set; }
+        public string? Name { get; set; }
+        public decimal PurchasePrice { get; set; }
+        public decimal SellPrice { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
     }
 }

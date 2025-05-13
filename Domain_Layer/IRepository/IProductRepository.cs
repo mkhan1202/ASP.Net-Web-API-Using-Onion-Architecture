@@ -7,7 +7,7 @@ using Domain_Layer.Model;
 
 namespace Domain_Layer.IRepository
 {
-    internal interface IProductRepository
+    public interface IProductRepository
     {
         Task<ProductModel> CreateProduct(ProductModel product);
         Task<ProductModel> UpdateProduct(ProductModel product);

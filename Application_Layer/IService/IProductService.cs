@@ -7,7 +7,7 @@ using Application_Layer.DTOs.ProductDTO;
 
 namespace Application_Layer.IService
 {
-    internal interface IProductService
+    public interface IProductService
     {
         Task<ProductCreateDTO> CreateProduct(ProductCreateDTO product);
         Task<ProductCreateDTO> UpdateProduct(ProductCreateDTO product);

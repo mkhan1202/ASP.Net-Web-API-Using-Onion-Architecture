@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Application_Layer.DTOs.ProductDTO
 {
-    public class ProductCreateDTO
+    public class ProductUpdateDTO
     {
-        [Required(ErrorMessage ="Product name is required"), StringLength(100, ErrorMessage ="Product name must be in 100 character")]
+        [Required(ErrorMessage = "Product name is required"), StringLength(100, ErrorMessage = "Product name must be in 100 character")]
         public string? Name { get; set; }
         [Required(ErrorMessage = "Purchase Price is required")]
         public decimal PurchasePrice { get; set; }

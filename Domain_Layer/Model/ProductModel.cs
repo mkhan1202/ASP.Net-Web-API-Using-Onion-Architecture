@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Domain_Layer.Model
 {
-    internal class ProductModel
+    public class ProductModel
     {
-        public int ProductId { get; set; }
+        public Guid ProductId { get; set; }
         public string? Name { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SellPrice { get; set; }
