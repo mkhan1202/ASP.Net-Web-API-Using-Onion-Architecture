@@ -3,6 +3,7 @@ using Application_Layer.Service;
 using Domain_Layer.IRepository;
 using Infrastructure_Layer.Persistance.Context;
 using Infrastructure_Layer.Persistance.Repository;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.Configure<ApiBehaviorOptions>(options => options.InvalidModelStateResponseFactory = context =>
+{
+    var errors = context.ModelState.Where(e => e.Value != null && e.Value.Errors.Count > 0).Select(e => new
+    {
+        Field = e.Key,
+        Errors = e.Value!.Errors.Select(x => x.ErrorMessage).ToArray()
+    }).ToList();
+    var errorString = string.Join("; ", errors.Select(e => $"{e.Field}: {string.Join(", ", e.Errors)}"));
+    return new BadRequestObjectResult(new
+    {
+        Message = "Validation failed",
+        Errors = errorString
+    });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

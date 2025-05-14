@@ -5,34 +5,64 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain_Layer.IRepository;
 using Domain_Layer.Model;
+using Infrastructure_Layer.Persistance.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure_Layer.Persistance.Repository
 {
     public class ProductRepository : IProductRepository
     {
-        public Task<ProductModel> CreateProduct(ProductModel product)
+        private readonly AppDBContext _context;
+
+        public ProductRepository(AppDBContext context)
         {
-            throw new NotImplementedException();
+            _context = context;
+        }
+        public async Task<ProductModel> CreateProduct(ProductModel product)
+        {
+            _context.Products.Add(product);
+            await _context.SaveChangesAsync();
+            return product;
         }
 
-        public Task<ProductModel> DeleteProduct(ProductModel product)
+        public async Task<bool> DeleteProduct(Guid id)
         {
-            throw new NotImplementedException();
+            ProductModel? findProduct = await _context.Products.FindAsync(id);
+            if (findProduct != null)
+            {
+                _context.Remove(findProduct);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-        public Task<ProductModel> GetAllProductByName()
+        public async Task<IEnumerable<ProductModel>> GetAllProducts()
         {
-            throw new NotImplementedException();
+            return await _context.Products.ToListAsync();
         }
 
-        public Task<ProductModel> GetProductById(int id)
+        public async Task<ProductModel?> GetProductById(Guid id)
         {
-            throw new NotImplementedException();
+            return await _context.Products.FindAsync(id);
         }
 
-        public Task<ProductModel> UpdateProduct(ProductModel product)
+        public async Task<ProductModel?> UpdateProduct(ProductModel product, Guid id)
         {
-            throw new NotImplementedException();
+            ProductModel? findProduct = await _context.Products.FindAsync(id);
+
+            if (findProduct != null)
+            {
+                findProduct.Name = product.Name;
+                findProduct.SellPrice = product.SellPrice;
+                findProduct.PurchasePrice = product.PurchasePrice;
+                findProduct.UpdatedAt = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+                return findProduct;
+            }
+
+            return null;
         }
     }
 }

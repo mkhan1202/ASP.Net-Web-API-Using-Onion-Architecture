@@ -8,7 +8,7 @@ namespace Application_Layer.DTOs.ProductDTO
 {
     public class ProductReadDTO
     {
-        public int ProductId { get; set; }
+        public Guid Id { get; set; }
         public string? Name { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SellPrice { get; set; }

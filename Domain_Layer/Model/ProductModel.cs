@@ -8,7 +8,7 @@ namespace Domain_Layer.Model
 {
     public class ProductModel
     {
-        public Guid ProductId { get; set; }
+        public Guid Id { get; set; }
         public string? Name { get; set; }
         public decimal PurchasePrice { get; set; }
         public decimal SellPrice { get; set; }
