@@ -16,7 +16,7 @@ namespace Application_Layer.Service
         {
             _repos = repos;
         }
-        public async Task<ProductCreateDTO> CreateProduct(ProductCreateDTO productDto)
+        public async Task<ProductReadDTO> CreateProduct(ProductCreateDTO productDto)
         {
             var product = new ProductModel
             {
@@ -24,17 +24,18 @@ namespace Application_Layer.Service
                 Name = productDto.Name,
                 PurchasePrice = productDto.PurchasePrice,
                 SellPrice = productDto.SellPrice,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow
             };
 
             await _repos.CreateProduct(product);
 
-            return new ProductCreateDTO
+            return new ProductReadDTO
             {
+                Id= product.Id,
                 Name = product.Name,
                 PurchasePrice = product.PurchasePrice,
                 SellPrice = product.SellPrice,
+                CreatedAt = DateTime.UtcNow
             };
         }
 

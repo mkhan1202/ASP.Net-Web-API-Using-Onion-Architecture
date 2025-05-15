@@ -9,7 +9,7 @@ namespace Application_Layer.IService
 {
     public interface IProductService
     {
-        Task<ProductCreateDTO> CreateProduct(ProductCreateDTO product);
+        Task<ProductReadDTO> CreateProduct(ProductCreateDTO product);
         Task<ProductUpdateDTO?> UpdateProduct(Guid id, ProductUpdateDTO product);
         Task<bool> DeleteProduct(Guid id);
         Task<ProductReadDTO?> GetProductById(Guid id);

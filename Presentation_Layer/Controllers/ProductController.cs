@@ -1,5 +1,4 @@
 ﻿using System.Collections.Concurrent;
-using System.Text.Json.Nodes;
 using Application_Layer.DTOs.ProductDTO;
 using Application_Layer.IService;
 using Microsoft.AspNetCore.Http;
@@ -19,10 +18,11 @@ namespace Presentation_Layer.Controllers
         }
 
         [HttpPost]
-        //public async Task<IActionResult> Create([FromBody] ProductCreateDTO createDto)
-        //{
-        //    return OkResult;
-        //}
+        public async Task<IActionResult> Create([FromBody] ProductCreateDTO createDto)
+        {
+            var product = await _service.CreateProduct(createDto);
+            return CreatedAtAction(nameof(ReadById), new {id=product.Id}, product);
+        }
         [HttpGet]
         public async Task<IActionResult> Read()
         {
@@ -32,6 +32,36 @@ namespace Presentation_Layer.Controllers
                 return Ok("No product available to show");
             }
             return Ok(products.ToList());
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> ReadById(Guid id)
+        {
+            var product = await _service.GetProductById(id);
+            return Ok(product);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] ProductUpdateDTO updateDto)
+        {
+            var updateProduct = await _service.UpdateProduct(id, updateDto);
+            if (updateProduct == null)
+            {
+                return NotFound("Product not found");
+            }
+            return Ok(updateDto);
+        }
+
+        [HttpDelete("{id:guid}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var deleteProduct= await _service.DeleteProduct(id);
+
+            if (deleteProduct == false)
+            {
+                return NotFound("Product not found");
+            }
+            return NoContent();
         }
     }
 }
