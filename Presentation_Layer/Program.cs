@@ -5,25 +5,36 @@ using Infrastructure_Layer.Persistance.Context;
 using Infrastructure_Layer.Persistance.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Presentation_Layer.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.Configure<ApiBehaviorOptions>(options => options.InvalidModelStateResponseFactory = context =>
+builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    var errors = context.ModelState.Where(e => e.Value != null && e.Value.Errors.Count > 0).Select(e => new
+    options.InvalidModelStateResponseFactory = context =>
     {
-        Field = e.Key,
-        Errors = e.Value!.Errors.Select(x => x.ErrorMessage).ToArray()
-    }).ToList();
-    var errorString = string.Join("; ", errors.Select(e => $"{e.Field}: {string.Join(", ", e.Errors)}"));
-    return new BadRequestObjectResult(new
-    {
-        Message = "Validation failed",
-        Errors = errorString
-    });
+        //var errors = context.ModelState.Where(e => e.Value != null && e.Value.Errors.Count > 0).Select(e => new
+        //{
+        //    Field = e.Key,
+        //    Errors = e.Value!.Errors.Select(x => x.ErrorMessage).ToArray()
+        //}).ToList();
+        //var errorString = string.Join("; ", errors.Select(e => $"{e.Field}: {string.Join(", ", e.Errors)}"));
+        //return new BadRequestObjectResult(new
+        //{
+        //    Message = "Validation failed",
+        //    Errors = errorString
+        //});
+        {
+            var errors = context.ModelState
+                .Where(e => e.Value != null && e.Value.Errors.Count > 0)
+                .SelectMany(e => e.Value?.Errors != null ? e.Value.Errors.Select(x => x.ErrorMessage): new List<string>()).ToList();
+
+            return new BadRequestObjectResult(ApiResponse<object>.ErrorResponse(errors, 400, "Validation failed"));
+        };
+    };
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -84,26 +84,52 @@ namespace Application_Layer.Service
             return null;
         }
 
-        public async Task<ProductUpdateDTO?> UpdateProduct(Guid id, ProductUpdateDTO product)
+        public async Task<ProductReadDTO?> UpdateProduct(Guid id, ProductUpdateDTO product)
         {
-            var findProduct = await _repos.GetProductById(id);
-            if (findProduct != null)
-            {
-                findProduct.Name = product.Name;
-                findProduct.PurchasePrice = product.PurchasePrice;
-                findProduct.SellPrice = product.SellPrice;
-                findProduct.UpdatedAt = DateTime.UtcNow;
 
-                await _repos.UpdateProduct(findProduct, id);
-                return new ProductUpdateDTO
+            ProductModel newProduct = new ProductModel
+            {
+                Id = id,
+                Name = product.Name,
+                PurchasePrice = product.PurchasePrice,
+                SellPrice = product.SellPrice
+            };
+
+            var update = await _repos.UpdateProduct(newProduct);
+
+            if (update != null)
+            {
+                return new ProductReadDTO
                 {
-                    Name = product.Name,
-                    PurchasePrice = product.PurchasePrice,
-                    SellPrice = product.SellPrice,
+                    Id = update.Id,
+                    Name = update.Name,
+                    PurchasePrice = update.PurchasePrice,
+                    SellPrice = update.SellPrice,
+                    CreatedAt = update.CreatedAt,
+                    UpdatedAt = update.UpdatedAt
                 };
             }
 
             return null;
+            //var update = await _repos.UpdateProduct(product, id);
+            //if (findProduct != null)
+            //{
+            //    findProduct.Name = product.Name;
+            //    findProduct.PurchasePrice = product.PurchasePrice;
+            //    findProduct.SellPrice = product.SellPrice;
+            //    findProduct.UpdatedAt = DateTime.UtcNow;
+
+            //    var update= await _repos.UpdateProduct(findProduct, id);
+            //    return new ProductReadDTO
+            //    {
+            //        Id = update.Id,
+            //        Name = product.Name,
+            //        PurchasePrice = product.PurchasePrice,
+            //        SellPrice = product.SellPrice,
+            //    };
+            //}
+
+            
         }
     }
 }

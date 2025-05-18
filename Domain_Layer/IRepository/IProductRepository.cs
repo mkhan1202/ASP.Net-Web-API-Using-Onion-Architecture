@@ -10,7 +10,7 @@ namespace Domain_Layer.IRepository
     public interface IProductRepository
     {
         Task<ProductModel> CreateProduct(ProductModel product);
-        Task<ProductModel?> UpdateProduct(ProductModel product, Guid id);
+        Task<ProductModel?> UpdateProduct(ProductModel product);
         Task<bool> DeleteProduct(Guid id);
         Task<ProductModel?> GetProductById(Guid id);
         Task<IEnumerable<ProductModel>> GetAllProducts();

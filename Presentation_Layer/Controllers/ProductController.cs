@@ -21,7 +21,8 @@ namespace Presentation_Layer.Controllers
         public async Task<IActionResult> Create([FromBody] ProductCreateDTO createDto)
         {
             var product = await _service.CreateProduct(createDto);
-            return CreatedAtAction(nameof(ReadById), new {id=product.Id}, product);
+            return Created($"api/[controller]/{product.Id}", ApiResponse<ProductReadDTO>
+                .SuccessResponse(product, 201, "Product added succesfully"));
         }
         [HttpGet]
         public async Task<IActionResult> Read()
@@ -29,16 +30,24 @@ namespace Presentation_Layer.Controllers
             var products= await _service.GetAllProduct();
             if (products == null)
             {
-                return Ok("No product available to show");
+                return NotFound(ApiResponse<object>
+                    .ErrorResponse(new List<string> {"No product in the database"}, 400,"Not found"));
             }
-            return Ok(products.ToList());
+            return Ok(ApiResponse<IEnumerable<ProductReadDTO>>
+                .SuccessResponse(products, 200, "Product returned Successfully"));
         }
 
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> ReadById(Guid id)
         {
             var product = await _service.GetProductById(id);
-            return Ok(product);
+            if (product == null)
+            {
+                return NotFound(ApiResponse<object>
+                    .ErrorResponse(new List<string> {"Product not found with the id"}, 400, "Validation error"));
+            }
+            return Ok(ApiResponse<ProductReadDTO>
+                .SuccessResponse(product, 200, "Product returned successfully"));
         }
 
         [HttpPut("{id:guid}")]
@@ -47,9 +56,11 @@ namespace Presentation_Layer.Controllers
             var updateProduct = await _service.UpdateProduct(id, updateDto);
             if (updateProduct == null)
             {
-                return NotFound("Product not found");
+                return NotFound(ApiResponse<object>
+                    .ErrorResponse(new List<string> { "Product not found with the id" }, 400, "Validation error"));
             }
-            return Ok(updateDto);
+            return Ok(ApiResponse<ProductReadDTO>
+                .SuccessResponse(updateProduct, 201, "Product updated successfully"));
         }
 
         [HttpDelete("{id:guid}")]
@@ -59,9 +70,11 @@ namespace Presentation_Layer.Controllers
 
             if (deleteProduct == false)
             {
-                return NotFound("Product not found");
+                return NotFound(ApiResponse<object>
+                    .ErrorResponse(new List<string> { "Product not found with the id" }, 400, "Validation error"));
             }
-            return NoContent();
+            return Ok(ApiResponse<object>
+                .SuccessResponse(null, 204, "Product deleted successfully"));
         }
     }
 }

@@ -1,10 +1,10 @@
 GET https://localhost:7224/api/product/
-# For more info on HTTP files go to https://aka.ms/vs/httpfile
+
 ###
 POST https://localhost:7224/api/product/
 Content-type: application/json
 {
-  "name": "Touch Queue",
+  "name": "Mkhan",
   "purchasePrice": 30000,
   "sellPrice": 120000.00
 }
@@ -20,3 +20,6 @@ Content-type: application/json
 ###
 
 DELETE https://localhost:7224/api/product/
+
+
+# For more info on HTTP files go to https://aka.ms/vs/httpfile

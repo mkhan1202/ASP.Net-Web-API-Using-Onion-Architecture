@@ -47,16 +47,16 @@ namespace Infrastructure_Layer.Persistance.Repository
             return await _context.Products.FindAsync(id);
         }
 
-        public async Task<ProductModel?> UpdateProduct(ProductModel product, Guid id)
+        public async Task<ProductModel?> UpdateProduct(ProductModel product)
         {
-            ProductModel? findProduct = await _context.Products.FindAsync(id);
+            ProductModel? findProduct = await _context.Products.FindAsync(product.Id);
 
             if (findProduct != null)
             {
                 findProduct.Name = product.Name;
                 findProduct.SellPrice = product.SellPrice;
                 findProduct.PurchasePrice = product.PurchasePrice;
-                findProduct.UpdatedAt = DateTime.Now;
+                findProduct.UpdatedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
                 return findProduct;
